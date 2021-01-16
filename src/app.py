@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo #modulo que ya integra flask y mongo
 from werkzeug.security import generate_password_hash, check_password_hash #modulo para hashear pass
-from bson import json_util #modulo para combertir de bson a json
+from bson import json_util #modulo para comvertir de bson a json
 from bson.objectid import ObjectId #comvertir el string de id a un object id
 
 app = Flask(__name__)
@@ -58,6 +58,14 @@ def get_user(id):
     response = json_util.dumps(user)
 
     return Response(response, mimetype='application/json')
+
+#Ruta para eliminar usuario
+@app.route('/usuarios/<id>', methods={'DELETE'})
+def delete_user(id):
+    mongo.db.users.delete_one({'_id': ObjectId(id)})
+    response = jsonify({'message': 'Usuario con id: ' + id + 'fue eliminado con exito'})
+
+    return response
 
 #Error 404
 @app.errorhandler(404)
