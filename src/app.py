@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo #modulo que ya integra flask y mongo
 from werkzeug.security import generate_password_hash, check_password_hash #modulo para hashear pass
 
@@ -37,8 +37,23 @@ def create_user():
         return response
         
     else: 
-        return {'menssage': 'recived'}
+        return not_found()
+
+    return {'menssage': 'recived'}
+
+#Error 404
+@app.errorhandler(404)
+def not_found(error=None):
     
+    #jsonify permite pasar mas parametros a la respues como el tipo de status error
+    response = jsonify({
+        'message': 'Recurso no encontrado en la ruta: ' + request.url,
+        'status': 404
+    })
+    response.status_code = 404
+
+    return response
+
 
 # Server
 if __name__ == "__main__":
