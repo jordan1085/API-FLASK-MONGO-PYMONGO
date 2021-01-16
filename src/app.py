@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo #modulo que ya integra flask y mongo
 from werkzeug.security import generate_password_hash, check_password_hash #modulo para hashear pass
+from bson import json_util #modulo para combertir de bson a json
 
 app = Flask(__name__)
 
@@ -40,6 +41,15 @@ def create_user():
         return not_found()
 
     return {'menssage': 'recived'}
+
+#Ruta para listar usuarios
+@app.route('/usuarios', methods={'GET'})
+def get_users():
+    users = mongo.db.users.find() #Mostrara los ussuarios en mongo
+    response = json_util.dumps(users) #bson a json
+
+    return Response(response, mimetype='application/json') #Response permite inprimir formateado el json
+    
 
 #Error 404
 @app.errorhandler(404)
