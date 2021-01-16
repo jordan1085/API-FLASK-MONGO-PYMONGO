@@ -67,6 +67,7 @@ def delete_user(id):
 
     return response
 
+
 #Error 404
 @app.errorhandler(404)
 def not_found(error=None):
